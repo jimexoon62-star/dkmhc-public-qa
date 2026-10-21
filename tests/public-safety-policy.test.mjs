@@ -41,3 +41,7 @@ test('non-approved workflow commands are detected', () => {
   const bad = 'permissions:\n  contents: read\n- uses: actions/checkout@v4\n- uses: actions/setup-node@v4\n  run: echo unsafe';
   assert.ok(inspectText('.github/workflows/public-qa.yml', bad).length);
 });
+
+test('approved public QA workflow path is permitted', () => {
+  assert.deepEqual(inspectPath('.github/workflows/public-qa.yml'), []);
+});

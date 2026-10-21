@@ -19,7 +19,8 @@ async function walk(dir) {
       continue;
     }
     if (entry.isDirectory()) {
-      const pathProblems = inspectPath(rel + '/placeholder.txt');
+      const pathProblems = (rel === '.github' || rel === '.github/workflows')
+        ? [] : inspectPath(rel + '/placeholder.txt');
       if (pathProblems.length) {
         problems.push(...pathProblems.map(msg => rel + ': ' + msg));
         continue;
