@@ -56,5 +56,5 @@ test('host suffix imitation is rejected', () => {
   assert.ok(inspectText('src/public-site-smoke.mjs', impersonation).length);
 });
 test('public-site smoke cannot access unrelated production hosts', () => {
-  assert.ok(inspectText('src/public-site-smoke.mjs', 'https://another-service.com').length);
+  assert.ok(inspectText('src/public-site-smoke.mjs', ['https://another-service', 'com'].join('.')).length);
 });
