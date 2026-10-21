@@ -1,0 +1,5 @@
+{
+  "description": "Fabricated data only. Not sourced from a real patient or conversation.",
+  "booking": [{ "case": "Sample A", "claimedPayment": true, "receiptImageProvided": true, "paymentVerified": false }],
+  "messages": [{ "case": "Sample B", "clinicalContent": false, "intent": "booking_information" }]
+}
