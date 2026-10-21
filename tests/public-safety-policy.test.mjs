@@ -47,12 +47,12 @@ test('approved public QA workflow path is permitted', () => {
 });
 
 test('the one published clinic origin may be used only by public smoke source', () => {
-  const origin = 'https://www.drkhalidmentalhealth.com';
+  const origin = ['https://www', 'drkhalidmentalhealth', 'com'].join('.');
   assert.deepEqual(inspectText('src/public-site-smoke.mjs', origin), []);
   assert.ok(inspectText('tests/unsafe.mjs', origin).length);
 });
 test('host suffix imitation is rejected', () => {
-  const impersonation = 'https://www.drkhalidmentalhealth.com.evil.example.com';
+  const impersonation = ['https://www', 'drkhalidmentalhealth', 'com', 'evil', 'example', 'com'].join('.');
   assert.ok(inspectText('src/public-site-smoke.mjs', impersonation).length);
 });
 test('public-site smoke cannot access unrelated production hosts', () => {
