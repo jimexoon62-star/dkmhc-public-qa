@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": false,
   "type": "module",
-  "description": "Independent synthetic, offline QA examples. No production integration.",
+  "description": "Independent synthetic policy checks and anonymous read-only smoke probes of public clinic pages. No private code or clinical access.",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "audit:public": "node scripts/audit-public.mjs"
+    "audit:public": "node scripts/audit-public.mjs",
+    "check:public-site": "node scripts/check-public-site.mjs"
   },
-  "engines": {"node": ">=20"}
+  "engines": {
+    "node": ">=20"
+  }
 }

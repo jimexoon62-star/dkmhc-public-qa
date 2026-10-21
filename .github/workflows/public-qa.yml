@@ -1,9 +1,11 @@
-name: Synthetic public QA (no live access)
+name: Public QA and read-only site smoke
 
 on:
   push:
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: '19 8 * * *'
 
 permissions:
   contents: read
@@ -23,3 +25,5 @@ jobs:
         run: npm test
       - name: Public content disclosure guard
         run: npm run audit:public
+      - name: Anonymous public page smoke check (GET only)
+        run: npm run check:public-site

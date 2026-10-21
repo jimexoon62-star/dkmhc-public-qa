@@ -45,3 +45,16 @@ test('non-approved workflow commands are detected', () => {
 test('approved public QA workflow path is permitted', () => {
   assert.deepEqual(inspectPath('.github/workflows/public-qa.yml'), []);
 });
+
+test('the one published clinic origin may be used only by public smoke source', () => {
+  const origin = 'https://www.drkhalidmentalhealth.com';
+  assert.deepEqual(inspectText('src/public-site-smoke.mjs', origin), []);
+  assert.ok(inspectText('tests/unsafe.mjs', origin).length);
+});
+test('host suffix imitation is rejected', () => {
+  const impersonation = 'https://www.drkhalidmentalhealth.com.evil.example.com';
+  assert.ok(inspectText('src/public-site-smoke.mjs', impersonation).length);
+});
+test('public-site smoke cannot access unrelated production hosts', () => {
+  assert.ok(inspectText('src/public-site-smoke.mjs', 'https://another-service.com').length);
+});

@@ -50,7 +50,19 @@ export function inspectText(rel, text) {
   const problems = [];
   if (typeof text !== 'string') return ['non-text content'];
   for (const [label, rx] of riskyPatterns) {
-    if (rx.test(text)) problems.push(label);
+    if (label === 'real endpoint' &&
+        (rel === 'src/public-site-smoke.mjs' || rel === 'src/public-safety-policy.mjs')) {
+      // The single explicitly public clinic hostname is permitted for read-only
+      // checks. Other endpoint hosts remain forbidden.
+      const allowed = 'https://www.drkhalidmentalhealth.com';
+      const all = [...text.matchAll(new RegExp(rx.source, 'gi'))];
+      for (const match of all) {
+        const next = text.slice(match.index + match[0].length, match.index + match[0].length + 1);
+        if (match[0] !== allowed || /[A-Za-z0-9_.-]/.test(next)) problems.push(label);
+      }
+    } else if (rx.test(text)) {
+      problems.push(label);
+    }
   }
   if (rel === '.github/workflows/public-qa.yml') {
     if (!text.includes('permissions:\n  contents: read')) problems.push('workflow permissions not read-only');
@@ -58,8 +70,9 @@ export function inspectText(rel, text) {
     if (uses.length !== 2 || uses[0] !== 'actions/checkout@v4' ||
         uses[1] !== 'actions/setup-node@v4') problems.push('unapproved workflow action');
     const runs = [...text.matchAll(/^\s+run:\s*(.+)$/gm)].map(x => x[1].trim());
-    if (runs.length !== 2 || runs[0] !== 'npm test' ||
-        runs[1] !== 'npm run audit:public') problems.push('unapproved workflow command');
+    if (runs.length !== 3 || runs[0] !== 'npm test' ||
+        runs[1] !== 'npm run audit:public' ||
+        runs[2] !== 'npm run check:public-site') problems.push('unapproved workflow command');
     if (/pull_request_target|workflow_call|(?<![A-Za-z])secrets\s*\.|contents:\s*write|npm\s+publish|wrangler|deploy|curl\s|wget\s/i.test(text)) {
       problems.push('unsafe workflow operation');
     }
